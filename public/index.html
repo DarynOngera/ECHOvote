@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opinion Poll Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#home">
+                <i class="bi bi-bar-chart-fill me-2"></i>
+                <span>ECHOvote</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link d-none" href="#home" id="homeLink">
+                            <i class="bi bi-house-fill me-1"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-none" href="#create" id="createPollLink">
+                            <i class="bi bi-plus-circle-fill me-1"></i>
+                            <span>Create Poll</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-none" href="#chat" id="chatLink">
+                            <i class="bi bi-chat-fill me-1"></i>
+                            <span>Live Chat</span>
+                            <span class="badge rounded-pill bg-light text-primary ms-1 d-none" id="chatBadge">0</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar-nav align-items-center" id="authNav">
+                    <a class="nav-link" href="#login" id="loginLink">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>
+                        <span>Login</span>
+                    </a>
+                    <a class="nav-link ms-lg-2" href="#register" id="registerLink">
+                        <i class="bi bi-person-plus-fill me-1"></i>
+                        <span>Register</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        <!-- Polls List -->
+        <div id="pollsList" class="row g-4 d-none">
+            <!-- Polls will be dynamically added here -->
+        </div>
+
+        <!-- Create Poll Form -->
+        <div id="createPollForm" class="d-none">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Create New Poll</h5>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="pollTitle" class="form-label">Poll Title</label>
+                            <input type="text" class="form-control" id="pollTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pollDescription" class="form-label">Description (Optional)</label>
+                            <textarea class="form-control" id="pollDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label d-flex justify-content-between align-items-center">
+                                <span>Options</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="addOption">
+                                    <i class="bi bi-plus-circle me-1"></i>Add Option
+                                </button>
+                            </label>
+                            <div id="pollOptions">
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Option 1" required>
+                                        <button type="button" class="btn btn-outline-danger" onclick="polls.removeOption(this)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Option 2" required>
+                                        <button type="button" class="btn btn-outline-danger" onclick="polls.removeOption(this)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endDate" class="form-label">End Date (Optional)</label>
+                            <input type="datetime-local" class="form-control" id="endDate">
+                            <div class="form-text">Leave empty for a poll without an end date</div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-1"></i>Create Poll
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Forms -->
+        <div id="authForms" class="row justify-content-center">
+            <!-- Login Form -->
+            <div id="loginForm" class="col-md-6 col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="text-center mb-4"><i class="bi bi-person-circle me-2"></i>Login</h2>
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Email address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control" placeholder="Enter your email" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                    <input type="password" class="form-control" placeholder="Enter your password" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="col-md-6 col-lg-4 d-none">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="text-center mb-4"><i class="bi bi-person-plus me-2"></i>Register</h2>
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" placeholder="Choose a username" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control" placeholder="Enter your email" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                    <input type="password" class="form-control" placeholder="Choose a password" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">
+                                <i class="bi bi-person-plus me-2"></i>Create Account
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Chat Section -->
+        <div id="liveChat" class="container-fluid d-none">
+            <div class="row h-100">
+                <!-- Rooms Sidebar -->
+                <div class="col-md-3 border-end p-0">
+                    <div class="d-flex flex-column h-100">
+                        <!-- Create Room Button -->
+                        <div class="p-3 border-bottom">
+                            <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#createRoomModal">
+                                <i class="bi bi-plus-circle"></i> Create Room
+                            </button>
+                        </div>
+                        
+                        <!-- Rooms List -->
+                        <div id="roomsList" class="flex-grow-1 overflow-auto">
+                            <!-- Rooms will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="col-md-9 p-0 d-flex flex-column h-100">
+                    <!-- Room Header -->
+                    <div class="p-3 border-bottom bg-light">
+                        <h5 id="currentRoomName" class="mb-0">Select a Room</h5>
+                        <small id="onlineUsers" class="text-muted">0 Online</small>
+                    </div>
+
+                    <!-- Messages Area -->
+                    <div id="chatMessages" class="flex-grow-1 overflow-auto p-3">
+                        <!-- Messages will be added here dynamically -->
+                    </div>
+
+                    <!-- Message Input -->
+                    <div class="p-3 border-top">
+                        <form id="chatForm" class="mb-0">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Type your message..." required>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-send"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Room Modal -->
+        <div class="modal fade" id="createRoomModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create New Chat Room</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createRoomForm">
+                            <div class="mb-3">
+                                <label for="roomName" class="form-label">Room Name</label>
+                                <input type="text" class="form-control" id="roomName" required
+                                    minlength="3" maxlength="30">
+                            </div>
+                            <div class="mb-3">
+                                <label for="roomDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="roomDescription" rows="2"
+                                    maxlength="200"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="roomType" class="form-label">Room Type</label>
+                                <select class="form-select" id="roomType">
+                                    <option value="public">Public</option>
+                                    <option value="private">Private</option>
+                                </select>
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Create Room</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <!-- Toasts will be dynamically added here -->
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/polls.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>
