@@ -1,4 +1,4 @@
-# Opinion Poll Platform
+# ECHOvote
 
 A real-time web-based opinion poll platform built with Node.js, Express, MongoDB, and Socket.IO. Users can create polls, vote on existing polls, and engage in live chat discussions.
 
